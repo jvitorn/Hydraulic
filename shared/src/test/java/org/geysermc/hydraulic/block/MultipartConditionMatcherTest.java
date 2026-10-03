@@ -52,6 +52,29 @@ class MultipartConditionMatcherTest {
                 "south", "false",
                 "up", "false"
         )));
+
+        // Ignoring the nested OR incorrectly accepts this state based only on up=false.
+        assertFalse(matches(condition, Map.of(
+                "north", "false",
+                "south", "false",
+                "up", "false"
+        )));
+        assertFalse(matches(condition, Map.of("north", "true", "south", "false", "up", "true")));
+    }
+
+    @Test
+    void matchesOrContainingAnd() {
+        Condition condition = Condition.or(
+                Condition.and(
+                        Condition.match("north", true),
+                        Condition.match("up", false)
+                ),
+                Condition.match("south", true)
+        );
+
+        assertTrue(matches(condition, Map.of("north", "true", "up", "false", "south", "false")));
+        assertTrue(matches(condition, Map.of("north", "false", "up", "true", "south", "true")));
+        assertFalse(matches(condition, Map.of("north", "true", "up", "true", "south", "false")));
     }
 
     @Test
