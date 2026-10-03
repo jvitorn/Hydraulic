@@ -5,10 +5,12 @@ import team.unnamed.creative.blockstate.Condition;
 import java.util.Objects;
 import java.util.function.Function;
 
+/** Evaluates condition trees without depending on Minecraft block instances. */
 final class MultipartConditionMatcher {
     private MultipartConditionMatcher() {
     }
 
+    // The lookup returns null for properties absent from the current block state.
     static boolean matches(Condition condition, Function<String, String> propertyValue) {
         if (condition == Condition.NONE) {
             return true;
